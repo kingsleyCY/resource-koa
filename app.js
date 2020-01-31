@@ -5,8 +5,8 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
-/* 引入自定义JS */
-const container =  require('./bin/container')(app)
+
+const router = require('./routes/index')
 
 // error handler
 onerror(app)
@@ -20,7 +20,7 @@ app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(views(__dirname + '/views', {
-  extension: 'pug'
+  extension: 'ejs'
 }))
 
 // logger
@@ -32,8 +32,7 @@ app.use(async (ctx, next) => {
 })
 
 // routes
-const index = require('./routes/index')
-app.use(index.routes(), index.allowedMethods())
+app.use(router.routes()).use(router.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {
